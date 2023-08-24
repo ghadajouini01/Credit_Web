@@ -38,7 +38,23 @@ require_once '..\..\Model\Categorie.php';
             }
         }
 
-        
+        function getOneById($id)
+    {
+        $requete = "select * from categorie where id =:id";
+        $config = config::getConnexion();
+        try {
+            $querry = $config->prepare($requete);
+            $querry->execute(
+                [
+                    'id'=>$id
+                ]
+            );
+            $result = $querry->fetch();
+            return $result ;
+        } catch (PDOException $th) {
+             $th->getMessage();
+        }
+    }
 
        
 
@@ -48,21 +64,42 @@ require_once '..\..\Model\Categorie.php';
             try {
                 $querry = $config->prepare('
                 INSERT INTO categorie
-                (nom,description,date_ajout)
+                (nom,description,date_ajout,img)
                 VALUES
-                (:nom,:description,:date_ajout)
+                (:nom,:description,:date_ajout,:img)
                 ');
                 $querry->execute([
                     'nom'=>$categ->getNom(),
                     'description'=>$categ->getDescription(),
-                    'date_ajout'=>$categ->getDate_ajout()->format('Y-m-d H:i:s')
+                    'date_ajout'=>$categ->getDate_ajout()->format('Y-m-d H:i:s'),
+                    'img'=>$categ->getImg()
                     
                 ]);
             } catch (PDOException $th) {
                  $th->getMessage();
             }
         }
-        
+        function ModifierCateorie($categ)
+        {
+            $config = config::getConnexion();
+            try {
+                $querry = $config->prepare('
+                UPDATE categorie SET
+                nom=:nom,description=:description,img=:img
+                where id=:id');
+                
+                $querry->execute([
+                    'id'=>$categ->getid(),
+                    'nom'=>$categ->getNom(),
+                    'description'=>$categ->getDescription(),
+                    'img'=>$categ->getImg()
+
+                  
+                ]);
+            } catch (PDOException $th) {
+                 $th->getMessage();
+            }
+        }
         
 
 

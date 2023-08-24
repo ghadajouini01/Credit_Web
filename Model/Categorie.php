@@ -6,13 +6,15 @@ class Categorie
     public $nom;
     public $description;
     public $date_ajout;
+    public $img;
 
-    public function __construct(int $id,string $nom,string $description,DateTime $date_ajout)
+    public function __construct(int $id,string $nom,string $description,DateTime $date_ajout,string $img)
     {
         $this->id=$id;
         $this->nom = $nom ;
         $this->description= $description;
         $this->date_ajout =$date_ajout;
+        $this->img=$img;
     }
 
     public function getId() : int 
@@ -30,6 +32,14 @@ class Categorie
     public function setNom(string $nom):void
     {
         $this->nom=$nom;
+    }
+    public function getImg() : string
+    {
+        return $this->img;
+    }
+    public function setImg(string $img):void
+    {
+        $this->img=$img;
     }
     public function getDescription() :string 
     {

@@ -5,8 +5,11 @@ include_once '../../Model/Categorie.php';
 
 
 $categC = new CategorieC();
-
-if (isset($_REQUEST['add'])) {
+if(isset($_GET['id']))
+{
+    $categtoedit=$categC->getOneById($_GET['id']);
+}
+if (isset($_REQUEST['edit'])) {
     $target_dir = "../uploads/";
     $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
     $uploadOk = 1;
@@ -45,19 +48,17 @@ if (isset($_REQUEST['add'])) {
         header('Location:blank.php?error=1');
     } else {
         if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-  
           $categC = new CategorieC();
-          if (isset($_REQUEST['add'])) {
+          if (isset($_REQUEST['edit'])) {
             $categC = new CategorieC();
-          $Now = new DateTime('now', new DateTimeZone('Europe/Paris'));
+          $date=new DateTime($categtoedit['date_ajout']);
           
           
             
-          $categ = new Categorie(1,$_POST['nom'],$_POST['description'],$Now,$target_file);
-          $categC->AjouterCategorie($categ);
+          $categ = new Categorie($_GET['id'],$_POST['nom'],$_POST['description'],$date,$target_file);
+          $categC->ModifierCateorie($categ);
            
             header('Location:indexCategorie.php');
-          
           } 
         }}
       } 
@@ -397,11 +398,11 @@ if (isset($_REQUEST['add'])) {
               <form enctype="multipart/form-data"  method="post"  >
           <div class="form-group">
           <label for="nom" class="custom-file-upload">Nom</label>
-    <input placeholder="Nom" type="text" name="nom" class="form-control" id="nom" required>
+    <input value="<?php echo $categtoedit['nom'] ; ?>" type="text" name="nom" class="form-control" id="nom" required>
   </div>
   <div class="form-group">
-  <label for="prenom" class="custom-file-upload">description</label>
-    <input placeholder="Description" type="text" name="description" class="form-control" id="description" required
+  <label for="description" class="custom-file-upload">description</label>
+    <input value="<?php echo $categtoedit['description'];?>" type="text" name="description" class="form-control" id="description" required
   </div>
   <div class="form-group">
   <label for="fileToUpload" class="custom-file-upload">Choisir Image</label>
@@ -410,7 +411,7 @@ if (isset($_REQUEST['add'])) {
   <br>
   <br>
   <div class="text-center">
-    <button type="submit" name="add" id="submit-btn"  class="btn btn-primary" >Ajouter</button>
+    <button type="submit" name="edit" id="submit-btn"  class="btn btn-primary" >Modifier</button>
   </div>
 </form>
 </div>

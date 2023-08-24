@@ -387,6 +387,7 @@ $listcat = $CategorieC->AfficherttCategorie();
         <th>Nom</th>
         <th>description</th>
       <th>date d'ajout</th>
+      <th>Image</th>
       
       <th>Actions</th>
     </tr>
@@ -397,10 +398,11 @@ $listcat = $CategorieC->AfficherttCategorie();
       <td><?php echo $key['nom'];?></td>
       <td><?php echo $key['description']; ?></td>
       <td><?php echo $key['date_ajout']; ?></td>
+      <td><img src="<?php echo $key['img'];?>"></td>
       <
       <td>
         <a href="deletecategorie.php?id=<?php echo $key['id'] ?>" >Supprimer</a>
-        <a href="editcategorie.php?id=<?php echo $key['id'] ?>" >Modifier</a>
+        <a href="editcateg.php?id=<?php echo $key['id'] ?>" >Modifier</a>
       </td>
     </tr>
     <?php } ?>
