@@ -1,10 +1,13 @@
 <?php 
 include "../../Controller/CategorieC.php";
 include_once '../../Model/Categorie.php';
-
+include "../../Controller/ProduitC.php";
+include_once '../../Model/Produit.php';
+include '../../Controller/UserC.php';
+require_once '../../model/User.php';
 session_start();
-$categC=new CategorieC();
-$listcateg=$categC->AfficherttCategorie();
+$prodC = new ProduitC();
+$listproduits=$prodC->AfficherParUser($_SESSION['id']);
 
 ?>
 
@@ -141,22 +144,93 @@ https://templatemo.com/tm-559-zay-shop
     <section class="container py-5">
         <div class="row text-center pt-3">
             <div class="col-lg-6 m-auto">
-                <h1 class="h1">Nos Categories</h1>
+                <h1 class="h1">Vos Produits</h1>
                 <p>
-                    Découvrez nos catégories !
+                   Consulter vos produits !
                 </p>
             </div>
         </div>
+        <style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    img {
+        max-width: 50px;
+        height: auto;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 5px;
+    }
+
+    .action-links {
+        display: flex;
+        gap: 5px;
+    }
+
+    .edit-link {
+        background-color: #4CAF50;
+        color: white;
+        padding: 5px 10px;
+        text-decoration: none;
+    }
+
+    .delete-link {
+        background-color: #f44336;
+        color: white;
+        padding: 5px 10px;
+        text-decoration: none;
+    }
+</style>
         <div class="row">
-        <?php foreach($listcateg as $key) { ?>
-    <div class="col-12 col-md-4 p-5 mt-3 text-center"> <!-- Added text-center class -->
-        <a href="#"><img src="<?php echo $key['img'] ;?>" width="250" height="auto" class="rounded-circle img-fluid border"></a>
-        <h5 class="text-center mt-3 mb-3"><?php echo $key['nom'] ; ?></h5>
-        <p class="text-center"><a class="btn btn-success" href="AjouterProduit.php?id=<?php echo $key['id'] ?>">Ajouter un produit</a></p>
-        <br>
-        <p class="text-center"><a class="btn btn-success" href="Shop.php?id=<?php echo $key['id'] ?>">Consulter shop</a></p>
+        <table>
+        <tr>
+            <th>ID</th>
+            <th>Categorie</th>
+            <th>Nom</th>
+            <th>Description</th>
+            <th>Date Ajout</th>
+            <th>Prix</th>
+            <th>Image</th>
+            <th>Actions</th>
+        </tr>
+        <?php foreach ($listproduits as $item): ?>
+        <tr>
+            <td><?php echo $item['id'] ?></td>
+            <td><?php echo $item['categorie'] ?></td>
+            <td><?php echo $item['nom'] ?></td>
+            <td><?php echo $item['description'] ?></td>
+            <td><?php echo $item['date_ajout'] ?></td>
+            <td><?php echo $item['prix'] ?></td>
+            <td><img src="<?php echo $item['img'] ?>" alt="<?php echo $item['nom'] ?>" width="50"></td>
+            <td class="action-links">
+            <a href="editproduit.php?id=<?php echo $item['id']?>" class="edit-link">Edit</a>
+            <a href="deleteproduit.php?id=<?php echo $item['id']?>" class="delete-link">Delete</a>
+        </td>
+        </tr>
+        <?php endforeach; ?>
+    </table>
+        
     </div>
-<?php } ?>
+
 
 
         </div>
@@ -165,93 +239,7 @@ https://templatemo.com/tm-559-zay-shop
 
 
     <!-- Start Featured Product -->
-    <section class="bg-light">
-        <div class="container py-5">
-            <div class="row text-center py-3">
-                <div class="col-lg-6 m-auto">
-                    <h1 class="h1">Featured Product</h1>
-                    <p>
-                        Reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                        Excepteur sint occaecat cupidatat non proident.
-                    </p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 col-md-4 mb-4">
-                    <div class="card h-100">
-                        <a href="shop-single.html">
-                            <img src="./assets/img/feature_prod_01.jpg" class="card-img-top" alt="...">
-                        </a>
-                        <div class="card-body">
-                            <ul class="list-unstyled d-flex justify-content-between">
-                                <li>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-muted fa fa-star"></i>
-                                    <i class="text-muted fa fa-star"></i>
-                                </li>
-                                <li class="text-muted text-right">$240.00</li>
-                            </ul>
-                            <a href="shop-single.html" class="h2 text-decoration-none text-dark">Gym Weight</a>
-                            <p class="card-text">
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt in culpa qui officia deserunt.
-                            </p>
-                            <p class="text-muted">Reviews (24)</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-4 mb-4">
-                    <div class="card h-100">
-                        <a href="shop-single.html">
-                            <img src="./assets/img/feature_prod_02.jpg" class="card-img-top" alt="...">
-                        </a>
-                        <div class="card-body">
-                            <ul class="list-unstyled d-flex justify-content-between">
-                                <li>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-muted fa fa-star"></i>
-                                    <i class="text-muted fa fa-star"></i>
-                                </li>
-                                <li class="text-muted text-right">$480.00</li>
-                            </ul>
-                            <a href="shop-single.html" class="h2 text-decoration-none text-dark">Cloud Nike Shoes</a>
-                            <p class="card-text">
-                                Aenean gravida dignissim finibus. Nullam ipsum diam, posuere vitae pharetra sed, commodo ullamcorper.
-                            </p>
-                            <p class="text-muted">Reviews (48)</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-4 mb-4">
-                    <div class="card h-100">
-                        <a href="shop-single.html">
-                            <img src="./assets/img/feature_prod_03.jpg" class="card-img-top" alt="...">
-                        </a>
-                        <div class="card-body">
-                            <ul class="list-unstyled d-flex justify-content-between">
-                                <li>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-warning fa fa-star"></i>
-                                </li>
-                                <li class="text-muted text-right">$360.00</li>
-                            </ul>
-                            <a href="shop-single.html" class="h2 text-decoration-none text-dark">Summer Addides Shoes</a>
-                            <p class="card-text">
-                                Curabitur ac mi sit amet diam luctus porta. Phasellus pulvinar sagittis diam, et scelerisque ipsum lobortis nec.
-                            </p>
-                            <p class="text-muted">Reviews (74)</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+   
     <!-- End Featured Product -->
 
 

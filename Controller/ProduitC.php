@@ -35,6 +35,20 @@ require_once '..\..\Model\Produit.php';
                  $th->getMessage();
             }
         }
+        function AfficherParUser($idc)
+        {
+            $requete = "select * from produit where id_user=:categ";
+            $config = config::getConnexion();
+            try {
+                $querry = $config->prepare($requete);
+                $querry->execute(['categ'=>$idc]);
+                //$result = $querry->fetchAll(PDO::FETCH_COLUMN, 1);
+                $result = $querry->fetchAll();
+                return $result ;
+            } catch (PDOException $th) {
+                 $th->getMessage();
+            }
+        }
 
         function getProduitById($id)
         {
@@ -81,11 +95,11 @@ require_once '..\..\Model\Produit.php';
                     'categorie'=>$produit->getCategorie(),
                     'nom'=>$produit->getNom(),
                     'description'=>$produit->getDescription(),
-                    'date_ajout'=>$film->getDate_ajout()->format('Y-m-d H:i:s'),
+                    'date_ajout'=>$produit->getDate_ajout()->format('Y-m-d H:i:s'),
                     'prix'=>$produit->getPrix(),
                     'img'=>$produit->getImg(),
                     'id_user'=>$produit->getId_user(),
-                    'prix'=>$film->getPrix()
+                    'prix'=>$produit->getPrix()
                    
                     
                 ]);
@@ -104,15 +118,15 @@ require_once '..\..\Model\Produit.php';
                 where id=:id');
                 
                 $querry->execute([
-                    'id'=>$film->getid(),
+                    'id'=>$produit->getid(),
                     'categorie'=>$produit->getCategorie(),
                     'nom'=>$produit->getNom(),
                     'description'=>$produit->getDescription(),
-                    'date_ajout'=>$film->getDate_ajout()->format('Y-m-d H:i:s'),
+                    'date_ajout'=>$produit->getDate_ajout()->format('Y-m-d H:i:s'),
                     'prix'=>$produit->getPrix(),
                     'img'=>$produit->getImg(),
                     'id_user'=>$produit->getId_user(),
-                    'prix'=>$film->getPrix()
+                    'prix'=>$produit->getPrix()
 
                   
                 ]);

@@ -1,12 +1,89 @@
 <?php 
 include "../../Controller/CategorieC.php";
 include_once '../../Model/Categorie.php';
-
+include "../../Controller/ProduitC.php";
+include_once '../../Model/Produit.php';
+include '../../Controller/UserC.php';
+require_once '../../model/User.php';
 session_start();
-$categC=new CategorieC();
-$listcateg=$categC->AfficherttCategorie();
+$prodC = new ProduitC();
+if(isset($_GET['id']))
+{
+    $prodtoedit=$prodC->getProduitById($_GET['id']);
+}
+if (isset($_REQUEST['edit'])) {
+  $target_dir = "../uploads/";
+  $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+  $uploadOk = 1;
+  $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+  $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+  if ($check !== false) {
+      // echo "File is an image - " . $check["mime"] . ".";
+      $uploadOk = 1;
+  } else {
+      // echo "File is not an image.";
+     // $uploadOk = 0;
+  }
+
+
+  // Check if file already exists
+  if (file_exists($target_file)) {
+      //  echo "Sorry, file already exists.";
+     // $uploadOk = 0;
+  }
+
+  // Check file size
+  if ($_FILES["fileToUpload"]["size"] > 500000) {
+      //  echo "Sorry, your file is too large.";
+     // $uploadOk = 0;
+  }
+
+  // Allow certain file formats
+  if (
+      $imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+      && $imageFileType != "gif"
+  ) {
+      //  echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+    //  $uploadOk = 0;
+  }
+  if ($uploadOk == 0) {
+      header('Location:blank.php?error=1');
+  } else {
+      if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+          //echo 'aaaaaa';
+         
+          $prodC = new ProduitC();
+          if (isset($_REQUEST['edit'])) {
+           
+            $prodC = new ProduitC();
+            
+            $date = new DateTime($prodtoedit['date_ajout']);
+            $idC=$prodtoedit['categorie'];
+          
+            $produit = new Produit($_GET['id'],$idC,$_POST['nom'], $_POST['description'],$date,$_POST['prix'],$target_file,$_SESSION['id'] );
+            $prodC->ModifierProduit($produit);
+            
+           
+            header('Location:Mesproduits.php');
+           
+          } 
+         
+      } else {
+          echo 'error';
+          //header('Location:blank.php');
+      }
+    
+    }
+  
+  }
+ 
+?> 
+
 
 ?>
+
+
+
 
 
 <!DOCTYPE html>
@@ -134,124 +211,41 @@ https://templatemo.com/tm-559-zay-shop
 
 
 
+    <section>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form method="post" enctype="multipart/form-data" class="bg-light p-4 rounded shadow">
+                <div class="form-group">
+                    <label for="nom">Nom</label>
+                    <input name="nom" id="nom" value="<?php echo $prodtoedit['nom'] ?>" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea name="description" id="description" value="<?php echo $prodtoedit['description'] ?>" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="prix">Prix</label>
+                    <input name="prix" id="prix" value="<?php echo $prodtoedit['prix'] ?>" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="fileToUpload">Choisir Image</label>
+                    <input value="<?php echo $prodtoedit['img'] ?>" required type="file" class="form-control-file" id="fileToUpload" name="fileToUpload">
+                </div>
+                <div class="text-center">
+                    <button type="submit" name="edit" id="submit-btn" class="btn btn-success btn-lg">Modifier</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+
+
    
 
 
-    <!-- Start Categories of The Month -->
-    <section class="container py-5">
-        <div class="row text-center pt-3">
-            <div class="col-lg-6 m-auto">
-                <h1 class="h1">Nos Categories</h1>
-                <p>
-                    Découvrez nos catégories !
-                </p>
-            </div>
-        </div>
-        <div class="row">
-        <?php foreach($listcateg as $key) { ?>
-    <div class="col-12 col-md-4 p-5 mt-3 text-center"> <!-- Added text-center class -->
-        <a href="#"><img src="<?php echo $key['img'] ;?>" width="250" height="auto" class="rounded-circle img-fluid border"></a>
-        <h5 class="text-center mt-3 mb-3"><?php echo $key['nom'] ; ?></h5>
-        <p class="text-center"><a class="btn btn-success" href="AjouterProduit.php?id=<?php echo $key['id'] ?>">Ajouter un produit</a></p>
-        <br>
-        <p class="text-center"><a class="btn btn-success" href="Shop.php?id=<?php echo $key['id'] ?>">Consulter shop</a></p>
-    </div>
-<?php } ?>
-
-
-        </div>
-    </section>
-    <!-- End Categories of The Month -->
-
-
     <!-- Start Featured Product -->
-    <section class="bg-light">
-        <div class="container py-5">
-            <div class="row text-center py-3">
-                <div class="col-lg-6 m-auto">
-                    <h1 class="h1">Featured Product</h1>
-                    <p>
-                        Reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                        Excepteur sint occaecat cupidatat non proident.
-                    </p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 col-md-4 mb-4">
-                    <div class="card h-100">
-                        <a href="shop-single.html">
-                            <img src="./assets/img/feature_prod_01.jpg" class="card-img-top" alt="...">
-                        </a>
-                        <div class="card-body">
-                            <ul class="list-unstyled d-flex justify-content-between">
-                                <li>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-muted fa fa-star"></i>
-                                    <i class="text-muted fa fa-star"></i>
-                                </li>
-                                <li class="text-muted text-right">$240.00</li>
-                            </ul>
-                            <a href="shop-single.html" class="h2 text-decoration-none text-dark">Gym Weight</a>
-                            <p class="card-text">
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt in culpa qui officia deserunt.
-                            </p>
-                            <p class="text-muted">Reviews (24)</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-4 mb-4">
-                    <div class="card h-100">
-                        <a href="shop-single.html">
-                            <img src="./assets/img/feature_prod_02.jpg" class="card-img-top" alt="...">
-                        </a>
-                        <div class="card-body">
-                            <ul class="list-unstyled d-flex justify-content-between">
-                                <li>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-muted fa fa-star"></i>
-                                    <i class="text-muted fa fa-star"></i>
-                                </li>
-                                <li class="text-muted text-right">$480.00</li>
-                            </ul>
-                            <a href="shop-single.html" class="h2 text-decoration-none text-dark">Cloud Nike Shoes</a>
-                            <p class="card-text">
-                                Aenean gravida dignissim finibus. Nullam ipsum diam, posuere vitae pharetra sed, commodo ullamcorper.
-                            </p>
-                            <p class="text-muted">Reviews (48)</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-4 mb-4">
-                    <div class="card h-100">
-                        <a href="shop-single.html">
-                            <img src="./assets/img/feature_prod_03.jpg" class="card-img-top" alt="...">
-                        </a>
-                        <div class="card-body">
-                            <ul class="list-unstyled d-flex justify-content-between">
-                                <li>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-warning fa fa-star"></i>
-                                </li>
-                                <li class="text-muted text-right">$360.00</li>
-                            </ul>
-                            <a href="shop-single.html" class="h2 text-decoration-none text-dark">Summer Addides Shoes</a>
-                            <p class="card-text">
-                                Curabitur ac mi sit amet diam luctus porta. Phasellus pulvinar sagittis diam, et scelerisque ipsum lobortis nec.
-                            </p>
-                            <p class="text-muted">Reviews (74)</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  
     <!-- End Featured Product -->
 
 

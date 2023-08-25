@@ -14,7 +14,7 @@ class Produit
     {
         $this->id=$id;
         $this->categorie=$categorie;
-        $this->noom=$nom;
+        $this->nom=$nom;
         $this->description=$description;
         $this->date_ajout=$date_ajout;
         $this->prix=$prix;

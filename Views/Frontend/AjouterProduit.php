@@ -3,12 +3,78 @@ include "../../Controller/CategorieC.php";
 include_once '../../Model/Categorie.php';
 include "../../Controller/ProduitC.php";
 include_once '../../Model/Produit.php';
+include '../../Controller/UserC.php';
+require_once '../../model/User.php';
 session_start();
-if(isset($_GET['id']))
-{
-    $categC=new CategorieC;
-    $categ=$categC->getOneById($_GET['id']);
-}
+$prodC = new ProduitC();
+
+if (isset($_REQUEST['add'])) {
+  $target_dir = "../uploads/";
+  $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+  $uploadOk = 1;
+  $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+  $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+  if ($check !== false) {
+      // echo "File is an image - " . $check["mime"] . ".";
+      $uploadOk = 1;
+  } else {
+      // echo "File is not an image.";
+     // $uploadOk = 0;
+  }
+
+
+  // Check if file already exists
+  if (file_exists($target_file)) {
+      //  echo "Sorry, file already exists.";
+     // $uploadOk = 0;
+  }
+
+  // Check file size
+  if ($_FILES["fileToUpload"]["size"] > 500000) {
+      //  echo "Sorry, your file is too large.";
+     // $uploadOk = 0;
+  }
+
+  // Allow certain file formats
+  if (
+      $imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+      && $imageFileType != "gif"
+  ) {
+      //  echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+    //  $uploadOk = 0;
+  }
+  if ($uploadOk == 0) {
+      header('Location:blank.php?error=1');
+  } else {
+      if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+          //echo 'aaaaaa';
+         
+          $prodC = new ProduitC();
+          if (isset($_REQUEST['add'])) {
+           
+            $prodC = new ProduitC();
+            $Now = new DateTime('now', new DateTimeZone('Europe/Paris'));
+         
+          
+            $produit = new Produit(1,$_GET['id'],$_POST['nom'], $_POST['description'],$Now,$_POST['prix'],$target_file,$_SESSION['id'] );
+            $prodC->AjouterProduit($produit);
+            
+           
+            header('Location:IndexFournisseur.php');
+           
+          } 
+         
+      } else {
+          echo 'error';
+          //header('Location:blank.php');
+      }
+    
+    }
+  
+  }
+ 
+?> 
+
 
 ?>
 
@@ -59,6 +125,7 @@ https://templatemo.com/tm-559-zay-shop
                     <a class="text-light" href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram fa-sm fa-fw me-2"></i></a>
                     <a class="text-light" href="https://twitter.com/" target="_blank"><i class="fab fa-twitter fa-sm fa-fw me-2"></i></a>
                     <a class="text-light" href="https://www.linkedin.com/" target="_blank"><i class="fab fa-linkedin fa-sm fa-fw"></i></a>
+                    <a class="text-light" href="disconnect.php" target="_blank">Logout</a>
                 </div>
             </div>
         </div>
@@ -82,16 +149,15 @@ https://templatemo.com/tm-559-zay-shop
                 <div class="flex-fill">
                     <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="index.html">Home</a>
+                            <a class="nav-link" href="indexfournisseur.php">Home</a>
+                        </li>
+                        
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="mesproduits.php">MesProduits</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="about.html">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="shop.html">Shop</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="contact.html">Contact</a>
                         </li>
                     </ul>
                 </div>

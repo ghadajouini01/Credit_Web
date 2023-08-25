@@ -76,12 +76,15 @@ https://templatemo.com/tm-559-zay-shop
                 <div class="flex-fill">
                     <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
                     <li class="nav-item">
-                            <a class="nav-link" href="indexfournisseur.php">Home</a>
+                            <a class="nav-link" href="indexclient.php">Home</a>
                         </li>
                         
                         
                         <li class="nav-item">
-                            <a class="nav-link" href="mesproduits.php">MesProduits</a>
+                            <a class="nav-link" href="Panier.php">Panier</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Wishlist.php">Wishlist</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="about.html">About</a>
@@ -152,9 +155,7 @@ https://templatemo.com/tm-559-zay-shop
     <div class="col-12 col-md-4 p-5 mt-3 text-center"> <!-- Added text-center class -->
         <a href="#"><img src="<?php echo $key['img'] ;?>" width="250" height="auto" class="rounded-circle img-fluid border"></a>
         <h5 class="text-center mt-3 mb-3"><?php echo $key['nom'] ; ?></h5>
-        <p class="text-center"><a class="btn btn-success" href="AjouterProduit.php?id=<?php echo $key['id'] ?>">Ajouter un produit</a></p>
-        <br>
-        <p class="text-center"><a class="btn btn-success" href="Shop.php?id=<?php echo $key['id'] ?>">Consulter shop</a></p>
+        <p class="text-center"><a class="btn btn-success" href="ShopClient.php?id=<?php echo $key['id'] ?>">Consulter shop</a></p>
     </div>
 <?php } ?>
 
