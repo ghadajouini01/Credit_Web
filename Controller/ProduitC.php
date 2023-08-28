@@ -151,7 +151,19 @@ require_once '..\..\Model\Produit.php';
 			}
         }
 
-       
+        function Recherche($id,$search)
+        {
+            $requete = "select * from produit  WHERE  nom LIKE '%$search%' AND categorie=:id  ";
+            $config = config::getConnexion();
+            try {
+                $querry = $config->prepare($requete);
+                $querry->execute(['id'=>$id]);
+                $result = $querry->fetchAll();
+                return $result ;
+            } catch (PDOException $th) {
+                 $th->getMessage();
+            }
+        }
 
         
     }

@@ -11,6 +11,9 @@ $produit=$prodC->getProduitById($_GET['id']);
 $categC= new CategorieC();
 $categorie=$categC->getOneById($produit['categorie']);
 $similarprod=$prodC->AfficherParCateg($categorie['id']);
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -174,40 +177,31 @@ https://templatemo.com/tm-559-zay-shop
                                 </li>
                             </ul>
 
-                            <h6>Specification:</h6>
-                            <ul class="list-unstyled pb-3">
-                                <li>Lorem ipsum dolor sit</li>
-                                <li>Amet, consectetur</li>
-                                <li>Adipiscing elit,set</li>
-                                <li>Duis aute irure</li>
-                                <li>Ut enim ad minim</li>
-                                <li>Dolore magna aliqua</li>
-                                <li>Excepteur sint</li>
-                            </ul>
+                            
 
-                            <form action="" method="GET">
-                                <input type="hidden" name="product-title" value="Activewear">
-                                <div class="row">
-                                   
-                                    <div class="col-auto">
-                                        <ul class="list-inline pb-3">
-                                            <li class="list-inline-item text-right">
-                                                Quantity
-                                                <input type="hidden" name="product-quanity" id="product-quanity" value="1">
-                                            </li>
-                                            <li class="list-inline-item"><span class="btn btn-success" id="btn-minus">-</span></li>
-                                            <li class="list-inline-item"><span class="badge bg-secondary" id="var-value">1</span></li>
-                                            <li class="list-inline-item"><span class="btn btn-success" id="btn-plus">+</span></li>
-                                        </ul>
+                            
+                                    <form action="AddPanier.php" method="POST">
+    <input type="hidden" name="product-id" value="<?php echo $produit['id'] ?>">
+
+    <div class="row">
+        <div class="col-auto">
+            <ul class="list-inline pb-3">
+                <li class="list-inline-item text-right">Quantity</li>
+                <li class="list-inline-item"><input type="number" name="product-quantity" id="product-quantity" value="1" min="1"></li>
+            </ul>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success btn-lg" name="submit">Ajouter au panier</button>
+    <!-- Other buttons -->
+</form>
+<br>
+<br>
+                                        <button type="submit" class="btn btn-success btn-lg" name="submit">Ajouter Wishlist</button>
+
                                     </div>
                                 </div>
-                                <div class="row pb-3">
-                                    
-                                    <div class="col d-grid">
-                                        <button type="submit" class="btn btn-success btn-lg" name="submit" value="addtocard">Add To Cart</button>
-                                    </div>
-                                </div>
-                            </form>
+                          
 
                         </div>
                     </div>

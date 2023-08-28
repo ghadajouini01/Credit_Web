@@ -1,13 +1,15 @@
-<?php 
+<?php
 include "../../Controller/CategorieC.php";
 include_once '../../Model/Categorie.php';
-
+include "../../Controller/ProduitC.php";
+include_once '../../Model/Produit.php';
+include '../../Controller/PanierC.php';
+require_once '../../model/Panier.php';
 session_start();
-$categC=new CategorieC();
-$listcateg=$categC->AfficherttCategorie();
+$panierc=new panierC();
+$panier=$panierc->AfficherPanier();
 
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -144,20 +146,93 @@ https://templatemo.com/tm-559-zay-shop
     <section class="container py-5">
         <div class="row text-center pt-3">
             <div class="col-lg-6 m-auto">
-                <h1 class="h1">Nos Categories</h1>
-                <p>
-                    Découvrez nos catégories !
-                </p>
+            <h1>Votre Panier</h1>
+
+<?php if (empty($panier)) : ?>
+    <p>Votre panier est vide.</p>
+<?php else : ?>
             </div>
         </div>
+        <style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    img {
+        max-width: 50px;
+        height: auto;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 5px;
+    }
+
+    .action-links {
+        display: flex;
+        gap: 5px;
+    }
+
+    .edit-link {
+        background-color: #4CAF50;
+        color: white;
+        padding: 5px 10px;
+        text-decoration: none;
+    }
+
+    .delete-link {
+        background-color: #f44336;
+        color: white;
+        padding: 5px 10px;
+        text-decoration: none;
+    }
+</style>
         <div class="row">
-        <?php foreach($listcateg as $key) { ?>
-    <div class="col-12 col-md-4 p-5 mt-3 text-center"> <!-- Added text-center class -->
-        <a href="#"><img src="<?php echo $key['img'] ;?>" width="250" height="auto" class="rounded-circle img-fluid border"></a>
-        <h5 class="text-center mt-3 mb-3"><?php echo $key['nom'] ; ?></h5>
-        <p class="text-center"><a class="btn btn-success" href="ShopClient.php?id=<?php echo $key['id'] ?>">Consulter shop</a></p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Quantité</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($panier as $p) : ?>
+                    <tr>
+                        <td>Produit : <?php $produitC=new ProduitC();
+                        $produit=$produitC->getProduitById($p['id']);
+                        echo $produit['nom'] ?></td>
+                        <td>Quantité: <?php echo $p['qtte']; ?></td>
+                    
+                    <td>
+                    <a href="deletePanier.php?id=<?php echo $p['id']?>" class="delete-link">Delete</a>
+                </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+
+    <a href="clear_cart.php">Vider le Panier</a>
+        
     </div>
-<?php } ?>
+
 
 
         </div>
@@ -166,7 +241,7 @@ https://templatemo.com/tm-559-zay-shop
 
 
     <!-- Start Featured Product -->
-  
+   
     <!-- End Featured Product -->
 
 
